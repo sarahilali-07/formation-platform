@@ -15,12 +15,20 @@ class FormationController extends Controller
 
     public function create()
     {
+        if (!auth()->user()->hasAnyRole([\App\Models\User::ROLE_SUPER_ADMIN, \App\Models\User::ROLE_ADMIN, \App\Models\User::ROLE_TEACHER])) {
+            abort(403, 'Unauthorized');
+        }
+
         return view('formations.create');
     }
 
 
      public function store(Request $request)
     {
+        if (!auth()->user()->hasAnyRole([\App\Models\User::ROLE_SUPER_ADMIN, \App\Models\User::ROLE_ADMIN, \App\Models\User::ROLE_TEACHER])) {
+            abort(403, 'Unauthorized');
+        }
+
         $request->validate([
             'titre_fr' => 'required|min:3',
             'titre_ar' => 'required|min:3',
@@ -41,6 +49,10 @@ class FormationController extends Controller
 
     public function edit($id)
     {
+        if (!auth()->user()->hasAnyRole([\App\Models\User::ROLE_SUPER_ADMIN, \App\Models\User::ROLE_ADMIN])) {
+            abort(403, 'Unauthorized');
+        }
+
         $formation = Formation::findOrFail($id);
         return view('formations.edit', compact('formation'));
     }
@@ -49,6 +61,10 @@ class FormationController extends Controller
 
      public function update(Request $request, $id)
     {
+        if (!auth()->user()->hasAnyRole([\App\Models\User::ROLE_SUPER_ADMIN, \App\Models\User::ROLE_ADMIN])) {
+            abort(403, 'Unauthorized');
+        }
+
         $request->validate([
             'titre_fr' => 'required|min:3',
             'titre_ar' => 'required|min:3',
@@ -70,6 +86,10 @@ class FormationController extends Controller
 
     public function destroy($id)
     {
+        if (!auth()->user()->hasAnyRole([\App\Models\User::ROLE_SUPER_ADMIN, \App\Models\User::ROLE_ADMIN])) {
+            abort(403, 'Unauthorized');
+        }
+
         Formation::destroy($id);
         return redirect()->route('formations.index');
     }

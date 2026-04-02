@@ -23,6 +23,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/dashboard', [\App\Http\Controllers\RoleController::class, 'dashboard'])->name('admin.dashboard');
+    Route::post('/admin/dashboard/promote-teacher', [\App\Http\Controllers\RoleController::class, 'assignTeacher'])->name('admin.dashboard.promote_teacher');
+
+    Route::get('/admin/users', [\App\Http\Controllers\RoleController::class, 'index'])->name('admin.users');
+    Route::post('/admin/users/{user}/role', [\App\Http\Controllers\RoleController::class, 'update'])->name('admin.users.role.update');
+});
+
 Route::get('/lang/{locale}', function ($locale) {
     session(['locale' => $locale]);
      app()->setLocale($locale); 

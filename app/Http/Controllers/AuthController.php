@@ -17,21 +17,22 @@ class AuthController extends Controller
 
     // 🔹 register user
     public function register(Request $request)
-{
-    $request->validate([
-        'name' => 'required',
-        'email' => 'required|email|unique:users',
-        'password' => 'required|min:6',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+        ]);
 
-    User::create([
-    'name' => $request->name,
-    'email' => $request->email,
-    'password' => $request->password, // ❗ بلا Hash::make
-]);
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => User::ROLE_STUDENT,
+        ]);
 
-    return redirect('/login');
-}
+        return redirect('/login');
+    }
 
     // 🔹 show login form
     public function showLogin()
